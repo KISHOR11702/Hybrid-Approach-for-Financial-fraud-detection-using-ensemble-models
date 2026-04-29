@@ -383,10 +383,25 @@ def _encode_col(series, vocab):
 
 def _most_common_past(group_series):
     """Return per-row past-mode (excludes current row)."""
-    result, past = [], []
+    result = []
+    freq = {}
+    current_mode = None
+    max_count = 0
+    
     for val in group_series:
-        result.append(max(set(past), key=past.count) if past else val)
-        past.append(val)
+        # Append the mode of the *past* values (excluding current val)
+        if current_mode is None:
+            result.append(val)
+        else:
+            result.append(current_mode)
+            
+        # Now update frequencies including the current val for the next iteration
+        freq[val] = freq.get(val, 0) + 1
+        # Simple tie-breaking: first to reach max_count stays mode until strictly beaten
+        if freq[val] > max_count:
+            max_count = freq[val]
+            current_mode = val
+            
     return pd.Series(result, index=group_series.index)
 
 def preprocess_sequences_lstm_data(df):
@@ -479,11 +494,9 @@ def preprocess_sequences_lstm_data(df):
     if 'avg_transaction_amount' not in df.columns:
         # running past-mean per user (excludes current row)
         def _running_mean(s):
-            vals = s.values.astype(float)
-            result = np.zeros(len(vals))
-            for i in range(len(vals)):
-                result[i] = vals[:i].mean() if i > 0 else vals[0]
-            return pd.Series(result, index=s.index)
+            if len(s) == 0: return s
+            # expanding mean, shift by 1 to exclude current row, fillna with first element
+            return s.expanding().mean().shift(1).fillna(s.iloc[0])
         df['avg_transaction_amount'] = df.groupby('user_id', group_keys=False)['amount'].apply(_running_mean)
 
     if 'amount_deviation_from_avg_pct' not in df.columns:
@@ -498,9 +511,10 @@ def preprocess_sequences_lstm_data(df):
     if 'transactions_last_1hr' not in df.columns and 'step' in df.columns:
         def _tx_last_n_steps(grp, n):
             steps = grp['step'].values
-            result = np.zeros(len(steps), dtype=int)
-            for i in range(len(steps)):
-                result[i] = int(np.sum((steps[:i] >= steps[i] - n) & (steps[:i] < steps[i])))
+            # searchsorted is O(N log N) instead of O(N^2)
+            upper_bound = np.searchsorted(steps, steps, side='left')
+            lower_bound = np.searchsorted(steps, steps - n, side='left')
+            result = upper_bound - lower_bound
             return pd.Series(result, index=grp.index)
         df['transactions_last_1hr']  = df.groupby('user_id', group_keys=False).apply(
             lambda g: _tx_last_n_steps(g, 1))
