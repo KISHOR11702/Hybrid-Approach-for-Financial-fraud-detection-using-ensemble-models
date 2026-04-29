@@ -1531,14 +1531,14 @@ def predict_live_batch():
         print(traceback.format_exc())
         return jsonify({'error': str(e)}), 500
 
+# Load models so they are available when running via gunicorn
+xgboost_loaded = load_model()
+lstm_loaded = load_lstm_model()
+
 if __name__ == '__main__':
     print("=" * 80)
     print("FRAUD DETECTION WEB APP - XGBOOST & LSTM")
     print("=" * 80)
-    
-    # Load models on startup
-    xgboost_loaded = load_model()
-    lstm_loaded = load_lstm_model()
     
     if xgboost_loaded or lstm_loaded:
         print("\n🚀 Starting Flask server...")
