@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anamoly Detection System - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            color: #718096;
+            margin-bottom: 40px;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .model-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .model-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .model-card.xgboost {
+            border-top: 5px solid #2c5282;
+        }
+
+        .model-card.lstm {
+            border-top: 5px solid #38a169;
+        }
+
+        .model-card h2 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .model-card p {
+            font-size: 1.1em;
+            color: #4a5568;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-item h3 {
+            font-size: 2em;
+            color: #2c5282;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .stat-item.lstm h3 {
+            color: #38a169;
+        }
+
+        .stat-item p {
+            font-size: 0.9em;
+            color: #718096;
+            margin: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn.xgboost {
+            background: #2c5282;
+        }
+
+        .btn.lstm {
+            background: #38a169;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn.xgboost:hover {
+            background: #2a4365;
+        }
+
+        .btn.lstm:hover {
+            background: #2f855a;
+        }
+
+        .features {
+            margin: 20px 0;
+        }
+
+        .feature-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            color: #2d3748;
+            font-size: 1.05em;
+            font-weight: 500;
+        }
+
+        .feature-list li:before {
+            content: "✓ ";
+            color: #38a169;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .comparison {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 40px;
+        }
+
+        .comparison h2 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-table th {
+            background: #f7fafc;
+            color: #2d3748;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .winner {
+            color: #38a169;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Anamoly Detection System</h1>
+            <p>Advanced Machine Learning & Deep Learning for Financial Fraud Detection</p>
+        </div>
+
+        <div class="models-grid">
+            <!-- XGBoost Card -->
+            <div class="model-card xgboost" onclick="window.location.href='/xgboost'">
+                <h2>⚡ XGBoost Model</h2>
+                <p>Fast and accurate gradient boosting model optimized for fraud detection with high precision.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+
+
+
+
+                        <h3>{{ xgboost_accuracy.recall }}%</h3>
+                        <p>Recall</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>{{ xgboost_accuracy.precision }}%</h3>
+                        <p>Precision</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>{{ xgboost_accuracy.auc_roc }}</h3>
+                        <p>PR AUC</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>{{ xgboost_accuracy.f1_score }}</h3>
+                        <p>F1-Score</p>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <ul class="feature-list">
+                        <li>78.49% Fraud Detection Rate</li>
+                        <li>Fast Training & Prediction</li>
+                        <li>24 Engineered Features</li>
+                        <li>Excellent for Tabular Data</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 25px;">
+                    <a href="/xgboost" class="btn xgboost">Use XGBoost →</a>
+                </div>
+            </div>
+
+            <!-- LSTM Card -->
+            <div class="model-card lstm" onclick="window.location.href='/lstm'">
+                <h2>🧠 LSTM Model</h2>
+                <p>Deep learning recurrent neural network for sequential pattern recognition in transaction data.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-item lstm">
+                        <h3>{{ "%.2f"|format(lstm_accuracy.recall) }}%</h3>
+                        <p>Recall</p>
+                    </div>
+                    <div class="stat-item lstm">
+                        <h3>{{ "%.2f"|format(lstm_accuracy.precision) }}%</h3>
+                        <p>Precision</p>
+                    </div>
+                    <div class="stat-item lstm">
+                        <h3>{{ "%.2f"|format(lstm_accuracy.auc * 100) }}%</h3>
+                        <p>PR AUC</p>
+                    </div>
+                    <div class="stat-item lstm">
+                        <h3>{{ "%.2f"|format(lstm_accuracy.f1_score) }}%</h3>
+                        <p>F1-Score</p>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <ul class="feature-list">
+                        <li>{{ "%.2f"|format(lstm_accuracy.recall) }}% Fraud Detection Rate</li>
+                        <li>Sequential Pattern Learning</li>
+                        <li>19 Optimized Features</li>
+                        <li>Trained on 3.9M Transactions</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 25px;">
+                    <a href="/lstm" class="btn lstm">Use LSTM →</a>
+                </div>
+            </div>
+
+            <!-- Hybrid Card -->
+            <div class="model-card" style="border-top:4px solid #6b46c1;cursor:pointer"
+                onclick="window.location.href='/hybrid'">
+                <h2>&#9889; Hybrid Ensemble</h2>
+                <p>XGBoost (40%) + LSTM (60%) soft-vote ensemble for maximum fraud detection accuracy.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-item" style="color:#6b46c1">
+                        <h3 style="color:#6b46c1">98.72%</h3>
+                        <p>Combined Recall</p>
+                    </div>
+                    <div class="stat-item" style="color:#6b46c1">
+                        <h3 style="color:#6b46c1">60/40</h3>
+                        <p>LSTM/XGB Weight</p>
+                    </div>
+                    <div class="stat-item" style="color:#6b46c1">
+                        <h3 style="color:#6b46c1">0.55</h3>
+                        <p>Ensemble Threshold</p>
+                    </div>
+                    <div class="stat-item" style="color:#6b46c1">
+                        <h3 style="color:#6b46c1">Soft</h3>
+                        <p>Vote Method</p>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <ul class="feature-list">
+                        <li>Both models run simultaneously</li>
+                        <li>Per-row XGBoost + LSTM probability</li>
+                        <li>Confidence indicator per transaction</li>
+                        <li>Model agreement breakdown</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 25px;">
+                    <a href="/hybrid" class="btn"
+                        style="background:linear-gradient(135deg,#6b46c1,#4299e1);color:white;padding:12px 30px;border-radius:8px;text-decoration:none;font-weight:700">Use
+                        Hybrid &#8594;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="comparison">
+            <h2>📊 Model Comparison</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>XGBoost</th>
+                        <th>LSTM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set xg_recall = xgboost_accuracy.recall %}
+                    {% set lstm_recall = lstm_accuracy.recall %}
+                    <tr>
+                        <td><strong>Recall (Fraud Detection)</strong></td>
+                        <td class="winner">{% if xg_recall >= lstm_recall %}{{ xg_recall }}% ⭐{% else %}{{ xg_recall
+                            }}%{% endif %}</td>
+                        <td>{% if lstm_recall >= xg_recall %}{{ "%.2f"|format(lstm_recall) }}% ⭐{% else %}{{
+                            "%.2f"|format(lstm_recall) }}%{% endif %}</td>
+                    </tr>
+                    {% set xg_prec = xgboost_accuracy.precision %}
+                    {% set lstm_prec = lstm_accuracy.precision %}
+                    <tr>
+                        <td><strong>Precision</strong></td>
+                        <td>{% if xg_prec >= lstm_prec %}{{ xg_prec }}% ⭐{% else %}{{ xg_prec }}%{% endif %}</td>
+                        <td>{% if lstm_prec >= xg_prec %}{{ "%.2f"|format(lstm_prec) }}% ⭐{% else %}{{
+                            "%.2f"|format(lstm_prec) }}%{% endif %}</td>
+                    </tr>
+                    {% set xg_pr = xgboost_accuracy.auc_roc / 100.0 %}
+                    {% set lstm_pr = lstm_accuracy.auc %}
+                    <tr>
+                        <td><strong>PR AUC Score</strong></td>
+                        <td class="winner">{% if xg_pr >= lstm_pr %}{{ xgboost_accuracy.auc_roc }}% ⭐{% else %}{{
+                            xgboost_accuracy.auc_roc }}%{% endif %}</td>
+                        <td>{% if lstm_pr >= xg_pr %}{{ "%.4f"|format(lstm_pr) }} ⭐{% else %}{{ "%.4f"|format(lstm_pr)
+                            }}{% endif %}</td>
+                    </tr>
+                    {% set xg_f1 = xgboost_accuracy.f1_score %}
+                    {% set lstm_f1 = lstm_accuracy.f1_score %}
+                    <tr>
+                        <td><strong>F1-Score</strong></td>
+                        <td>{% if xg_f1 >= lstm_f1 %}{{ xg_f1 }}% ⭐{% else %}{{ xg_f1 }}%{% endif %}</td>
+                        <td class="winner">{% if lstm_f1 >= xg_f1 %}{{ "%.2f"|format(lstm_f1) }}% ⭐{% else %}{{
+                            "%.2f"|format(lstm_f1) }}%{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Training Speed</strong></td>
+                        <td class="winner">Fast ⚡</td>
+                        <td>Slower</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prediction Speed</strong></td>
+                        <td class="winner">Very Fast ⚡</td>
+                        <td>Moderate</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best Use Case</strong></td>
+                        <td class="winner">Tabular Data ⭐</td>
+                        <td>Sequential Patterns</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

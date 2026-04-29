@@ -1,0 +1,55 @@
+{
+    "model_name": "LSTM Transaction Sequences (Leakage-Free Version)",
+    "train_date": "2026-02-23 15:49:56",
+    "leakage_fixes_applied": {
+        "fix_1_user_split": "Users split before sequence creation (zero overlap)",
+        "fix_2_past_only_features": "Features computed from past data only",
+        "fix_3_proper_scaling": "Scaler fitted only on train data",
+        "fix_4_separate_encoding": "Encoders trained separately on train/test",
+        "verification": {
+            "user_overlap": 0,
+            "train_auc": 0.6412065210321549,
+            "test_auc": 0.6339634656906128,
+            "auc_gap": 0.007243055341542126
+        }
+    },
+    "removed_features": [
+        "fraud_count_last_7days (label leakage)",
+        "shared_device_count (investigation feature)",
+        "shared_ip_count (investigation feature)",
+        "linked_accounts_count (investigation feature)"
+    ],
+    "num_train_users": 96000,
+    "num_test_users": 24000,
+    "num_train_sequences": 96000,
+    "num_test_sequences": 24000,
+    "sequence_length": 15,
+    "num_features": 19,
+    "test_accuracy": 0.5625,
+    "test_precision": 0.21273492276668549,
+    "test_recall": 0.6515111923217773,
+    "test_auc": 0.6339634656906128,
+    "optimal_threshold": 0.5301117300987244,
+    "feature_columns": [
+        "amount",
+        "merchant_category_encoded",
+        "time_gap_from_previous_hrs",
+        "amount_deviation_from_avg_pct",
+        "transactions_last_1hr",
+        "transactions_last_24hr",
+        "account_age_days",
+        "avg_transaction_amount",
+        "transaction_frequency",
+        "device_id_encoded",
+        "location_encoded",
+        "most_used_device_encoded",
+        "most_used_location_encoded",
+        "location_changed",
+        "device_changed",
+        "hour",
+        "day_of_week",
+        "day_of_month",
+        "month"
+    ],
+    "epochs_trained": 15
+}

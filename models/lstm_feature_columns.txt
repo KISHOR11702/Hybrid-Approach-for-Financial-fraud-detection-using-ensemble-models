@@ -1,0 +1,27 @@
+Transaction Amount
+amount_log
+amount_sqrt
+hour
+day_of_week
+is_weekend
+is_night
+is_business_hours
+is_small_amount
+is_medium_amount
+is_large_amount
+is_round_100
+is_round_1000
+type_encoded
+device_encoded
+status_encoded
+slice_encoded
+Latency (ms)
+Slice Bandwidth (Mbps)
+type_ATM Withdrawal
+type_Deposit
+type_NetBanking
+type_Transfer
+type_UPI
+device_Desktop
+device_Mobile
+device_Tablet

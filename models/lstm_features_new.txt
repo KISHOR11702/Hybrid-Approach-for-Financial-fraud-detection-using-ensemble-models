@@ -1,0 +1,25 @@
+amount
+amount_log
+amount_sqrt
+is_round_100
+is_round_1000
+hour
+day_of_week
+day_of_month
+latency
+bandwidth
+status_success
+user_txn_count
+user_avg_amount
+time_since_last_txn
+amount_deviation
+type_ATM Withdrawal
+type_Deposit
+type_NetBanking
+type_Transfer
+type_UPI
+device_Desktop
+device_Mobile
+network_Slice1
+network_Slice2
+network_Slice3

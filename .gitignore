@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.csv
+*.zip
+*.log
+plots/
+uploads/Test_Transactions_data.csv
+.env
