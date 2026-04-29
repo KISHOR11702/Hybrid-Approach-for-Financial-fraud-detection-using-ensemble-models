@@ -413,7 +413,7 @@ def preprocess_sequences_lstm_data(df):
 
     # ── timestamp / time features ──
     if 'timestamp' in df.columns:
-        df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+        df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce', dayfirst=True)
         df['hour']         = df['timestamp'].dt.hour.fillna(12).astype(int)
         df['day_of_week']  = df['timestamp'].dt.dayofweek.fillna(1).astype(int)
         df['day_of_month'] = df['timestamp'].dt.day.fillna(15).astype(int)

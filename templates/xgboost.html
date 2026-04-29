@@ -409,7 +409,20 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(async r => {
+                if (!r.ok) {
+                    const text = await r.text();
+                    try {
+                        const json = JSON.parse(text);
+                        throw new Error(json.error || 'Server error: ' + r.status);
+                    } catch (e) {
+                        if (r.status === 413) throw new Error("File is too large! Maximum allowed size is 100MB.");
+                        if (r.status === 504 || r.status === 502) throw new Error("Server timed out. The file might be too large to process within 30 seconds.");
+                        throw new Error('Server returned an HTML error (' + r.status + '). The file might be too large or caused a crash.');
+                    }
+                }
+                return r.json();
+            })
             .then(data => {
                 document.getElementById('loadingDiv').style.display = 'none';
                 
